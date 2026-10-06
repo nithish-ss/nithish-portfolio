@@ -1,0 +1,60 @@
+@import "@fontsource-variable/space-grotesk";
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/jetbrains-mono";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens. Change the accent here (RGB channels) to re-theme the whole site. */
+:root {
+  color-scheme: dark;
+  --bg: 11 15 23;        /* #0B0F17 deep slate */
+  --card: 15 21 32;
+  --line: 30 39 54;
+  --fg: 240 244 250;
+  --muted: 138 148 166;
+  --accent: 0 242 254;   /* #00F2FE electric cyan */
+  --accent2: 59 130 246; /* blue end of the gradient */
+}
+
+@layer base {
+  html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
+  body { @apply bg-bg font-sans text-fg antialiased; }
+  h1, h2, h3, h4 { @apply font-display; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  :focus-visible { outline: 2px solid rgb(var(--accent)); outline-offset: 3px; border-radius: 6px; }
+  ::selection { background: rgb(var(--accent) / 0.25); }
+}
+
+@layer components {
+  .container-page { @apply mx-auto w-full max-w-page px-5 sm:px-8; }
+  .section { @apply py-20 sm:py-28; }
+  .card { @apply rounded-xl border border-line bg-card/70; }
+  .eyebrow { @apply font-display text-xs font-medium uppercase tracking-[0.2em] text-accent; }
+  .meta { @apply font-mono text-xs text-muted; }
+  .btn { @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md px-5 font-display text-sm font-medium transition-all duration-150; }
+  .btn-primary { @apply bg-accent text-bg hover:brightness-110; }
+  .btn-ghost { @apply border border-line bg-card/60 text-fg hover:border-accent/40; }
+  .tag { @apply rounded border border-line px-2 py-0.5 font-mono text-xs text-muted; }
+  .pill { @apply rounded border border-accent/30 bg-accent/10 px-2 py-0.5 font-display text-xs font-medium text-accent; }
+  .icon-box { @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent; }
+  .text-gradient {
+    background-image: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent2)));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(rgb(var(--line) / 0.55) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--line) / 0.55) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 20%, #000 10%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 20%, #000 10%, transparent 75%);
+  }
+  .ph { border-bottom: 1px dashed #f59e0b; }
+  .prose-lite p { @apply mb-4 leading-7 text-muted; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

@@ -1,0 +1,62 @@
+# One command, one website: http://localhost:8080
+#   /        the portfolio
+#   /api/    FastAPI (contact form)
+#   /demo    the ML demo page (embeds Streamlit)
+#   /streamlit/  the Streamlit app itself
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-portfolio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-portfolio}
+      POSTGRES_DB: ${POSTGRES_DB:-portfolio}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-portfolio}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-portfolio}:${POSTGRES_PASSWORD:-portfolio}@db:5432/${POSTGRES_DB:-portfolio}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5173}
+      CONTACT_RATE_LIMIT: ${CONTACT_RATE_LIMIT:-5/hour}
+      GITHUB_USERNAME: ${GITHUB_USERNAME:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      ML_ARTIFACTS_DIR: /models   # trained demo model, shared from the ml-demo container
+    volumes:
+      - models:/models:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      ml-demo:
+        condition: service_started
+    ports:
+      - "8000:8000"
+
+  ml-demo:
+    build: ./ml
+    volumes:
+      - models:/app/artifacts
+    ports:
+      - "8501:8501"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_SITE_URL: ${VITE_SITE_URL:-}
+        VITE_STREAMLIT_URL: ${VITE_STREAMLIT_URL:-}
+        BUILD_CMD: build
+    depends_on:
+      - backend
+      - ml-demo
+    ports:
+      - "8080:80"
+
+volumes:
+  pgdata:
+  models:

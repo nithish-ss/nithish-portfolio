@@ -1,0 +1,53 @@
+{
+  "dataset": "Olist Brazilian E-Commerce Public Dataset (Kaggle): orders, payments and reviews tables",
+  "target": "satisfied = review score of 4 or 5",
+  "n_orders": 95821,
+  "n_train": 76656,
+  "n_test": 19165,
+  "share_satisfied": 0.7893,
+  "validation": "Stratified 80/20 split. Models compared with 5-fold CV (ROC-AUC) on the training split only; SMOTE applied inside the training folds. Test split used once.",
+  "chosen_model": "logistic regression",
+  "cv_roc_auc": {
+    "baseline (always 'satisfied')": {
+      "mean": 0.5,
+      "std": 0.0
+    },
+    "logistic regression": {
+      "mean": 0.6571,
+      "std": 0.0036
+    },
+    "random forest": {
+      "mean": 0.6348,
+      "std": 0.0035
+    }
+  },
+  "test": {
+    "accuracy": 0.6931,
+    "balanced_accuracy": 0.6231,
+    "precision": 0.8485,
+    "recall": 0.744,
+    "f1": 0.7928,
+    "roc_auc": 0.6625,
+    "baseline_accuracy": 0.7893
+  },
+  "confusion_matrix": {
+    "labels": [
+      "unsatisfied",
+      "satisfied"
+    ],
+    "matrix": [
+      [
+        2028,
+        2010
+      ],
+      [
+        3872,
+        11255
+      ]
+    ]
+  },
+  "notes": [
+    "Trained on the public Olist dataset to demonstrate the workflow. Figures here come from this training run.",
+    "Predicts whether a delivered order's review is 4 or 5 stars, from delivery timing and payment details only."
+  ]
+}
