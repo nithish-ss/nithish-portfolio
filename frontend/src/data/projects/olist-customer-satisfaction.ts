@@ -1,4 +1,3 @@
-import { site } from "../site";
 import type { Project } from "../types";
 
 export const project: Project = {
