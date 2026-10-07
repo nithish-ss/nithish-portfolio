@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 class ContactIn(BaseModel):
     """Mirrors the Zod schema in frontend/src/sections/Contact.tsx."""
 
-    name: str = Field(min_length=1, max_length=100)
+    name: str = Field(min_length=1, max_length=100,pattern=r"^[A-Za-z]+(?: [A-Za-z]+)*$",)
     email: EmailStr
     message: str = Field(min_length=10, max_length=2000)
     website: str | None = Field(default=None, max_length=200)  # honeypot
