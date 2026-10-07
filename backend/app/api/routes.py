@@ -1,3 +1,4 @@
+from app.services.email_service import send_contact_email
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, Request
@@ -32,8 +33,13 @@ def contact(request: Request, payload: ContactIn, db: Session = Depends(get_db))
         return ContactOut()
     ip = request.client.host if request.client else None
     try:
-        contact_service.save_message(db, payload, ip)
-    except SQLAlchemyError:
+    contact_service.save_message(db, payload, ip)
+    send_contact_email(
+        name=payload.name,
+        email=str(payload.email),
+        message=payload.message,
+    )
+except SQLAlchemyError:
         log.exception("Failed to store contact message")
         raise HTTPException(status_code=503, detail="Messages can't be saved right now. Please email me directly.")
     return ContactOut()

@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     # Where ml/train_olist.py wrote model.joblib + metrics.json. Empty = <repo>/ml/artifacts.
     ml_artifacts_dir: str = ""
     environment: str = "development"
+    resend_api_key: str = ""
+    contact_email: str = ""
 
     model_config = SettingsConfigDict(env_file=(".env", "../.env"), extra="ignore")
 
