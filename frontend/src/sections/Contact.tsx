@@ -8,7 +8,7 @@ import { site } from "../data/site";
 import { sendContact } from "../lib/api";
 
 const schema = z.object({
-  name: z.string().trim().min(1, "Enter your name").max(100, "Keep your name under 100 characters"),
+  name: z.string().trim().min(1, "Enter your name").max(100, "Keep your name under 100 characters").regex(/^[A-Za-z]+(?: [A-Za-z]+)*$/, "Name can contain letters and spaces only"),
   email: z.string().trim().email("Enter a valid email address").max(254),
   message: z.string().trim().min(10, "Write at least 10 characters").max(2000, "Keep the message under 2000 characters"),
   website: z.string().max(0).optional(), // honeypot: real users never fill this
